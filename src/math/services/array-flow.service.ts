@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { FlowChildJob, FlowProducer } from 'bullmq';
 import { MATH_ARRAY_CHILD, MATH_ARRAY_MERGE } from '../constants/math-array.constant';
-import { InjectMathComparisonProducer } from '../decorators/inject-flow-producer.decorator';
+import { InjectMathArrayProducer } from '../decorators/inject-flow-producer.decorator';
 import { ArrayOperationDto } from '../dtos/array-operation.dto';
 import { MATH_ARRAY_OPS } from '../enums/math-array-ops.enum';
 
@@ -9,12 +9,12 @@ const PARTITION_SIZE = 4;
 
 @Injectable()
 export class ArrayFlowService {
-  constructor(@InjectMathComparisonProducer() private mathComparisonFlowProducer: FlowProducer) {}
+  constructor(@InjectMathArrayProducer() private mathFlowProducer: FlowProducer) {}
 
   async createFlow(dto: ArrayOperationDto, jobName: MATH_ARRAY_OPS): Promise<string> {
     const children = this.createChildJobs(dto, jobName);
 
-    const flow = await this.mathComparisonFlowProducer.add({
+    const flow = await this.mathFlowProducer.add({
       name: jobName,
       queueName: MATH_ARRAY_MERGE,
       children,
@@ -29,7 +29,7 @@ export class ArrayFlowService {
     const minChildren = this.createChildJobs(dto, MATH_ARRAY_OPS.MIN);
     const maxChildren = this.createChildJobs(dto, MATH_ARRAY_OPS.MAX);
 
-    const flows = await this.mathComparisonFlowProducer.addBulk([
+    const flows = await this.mathFlowProducer.addBulk([
       {
         name: MATH_ARRAY_OPS.MIN,
         queueName: MATH_ARRAY_MERGE,
