@@ -1,0 +1,14 @@
+version: '3'
+services:
+  redis2:
+    image: redis:latest
+    container_name: redis2
+    ports:
+      - '6379:6379'
+    expose:
+      - '6379'
+    networks:
+      - redis
+networks:
+  redis:
+    driver: bridge

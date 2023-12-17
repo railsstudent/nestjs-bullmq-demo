@@ -1,0 +1,6 @@
+export enum MATH_BINARY_OPS {
+  SUM = 'SUM',
+  SUBTRACT = 'SUBTRACT',
+  MULTIPLY = 'MULTIPLY',
+  DIVISION = 'DIVISION',
+}
