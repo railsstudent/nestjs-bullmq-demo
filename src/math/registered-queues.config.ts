@@ -1,11 +1,10 @@
 import { BullModule } from '@nestjs/bullmq';
+import { MATH_BINARY, MATH_UNARY } from './constants/math.constant';
 import {
-  MATH_BINARY,
-  MATH_UNARY,
-  MATH_COMPARISON_PRODUCER,
   MATH_COMPARISON_CHILD,
   MATH_COMPARISON_MERGE,
-} from './constants/math.constant';
+  MATH_COMPARISON_PRODUCER,
+} from './constants/math-comparison-flow.constant';
 
 export const REGISTERED_BULLMQS = [
   BullModule.registerQueue({
