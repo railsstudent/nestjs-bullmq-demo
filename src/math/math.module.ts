@@ -1,10 +1,6 @@
 import { Module } from '@nestjs/common';
 import { QueueModule } from '../queue-board/queue-board.module';
-import {
-  MATH_COMPARISON_CHILD,
-  MATH_COMPARISON_MERGE,
-  MATH_COMPARISON_PRODUCER,
-} from './constants/math-comparison-flow.constant';
+import { MATH_ARRAY_CHILD, MATH_ARRAY_MERGE, MATH_ARRAY_PRODUCER } from './constants/math-array.constant';
 import { MATH_BINARY, MATH_UNARY } from './constants/math.constant';
 import { MathComparisonController } from './controllers/math-comparison.controller';
 import { MathController } from './controllers/math.controller';
@@ -17,8 +13,8 @@ import { ComparisonFlowService } from './services/comparison-flow.service';
 @Module({
   imports: [
     QueueModule.register({
-      queues: [MATH_BINARY, MATH_UNARY, MATH_COMPARISON_CHILD, MATH_COMPARISON_MERGE],
-      flows: [MATH_COMPARISON_PRODUCER],
+      queues: [MATH_BINARY, MATH_UNARY, MATH_ARRAY_CHILD, MATH_ARRAY_MERGE],
+      flows: [MATH_ARRAY_PRODUCER],
     }),
   ],
   providers: [

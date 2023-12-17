@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { FlowChildJob, FlowProducer } from 'bullmq';
-import { MATH_COMPARISON_CHILD, MATH_COMPARISON_MERGE } from '../constants/math-comparison-flow.constant';
+import { MATH_ARRAY_CHILD, MATH_ARRAY_MERGE } from '../constants/math-array.constant';
 import { InjectMathComparisonProducer } from '../decorators/inject-flow-producer.decorator';
 import { ComparisonOperationDto } from '../dtos/comparison-operation.dto';
-import { MATH_COMPARISON_OPS } from '../enums/math-comparison-ops.enum';
+import { MATH_ARRAY_OPS } from '../enums/math-array-ops.enum';
 
 const PARTITION_SIZE = 4;
 
@@ -11,12 +11,12 @@ const PARTITION_SIZE = 4;
 export class ComparisonFlowService {
   constructor(@InjectMathComparisonProducer() private mathComparisonFlowProducer: FlowProducer) {}
 
-  async createFlow(dto: ComparisonOperationDto, jobName: MATH_COMPARISON_OPS): Promise<string> {
+  async createFlow(dto: ComparisonOperationDto, jobName: MATH_ARRAY_OPS): Promise<string> {
     const children = this.createChildJobs(dto, jobName);
 
     const flow = await this.mathComparisonFlowProducer.add({
       name: jobName,
-      queueName: MATH_COMPARISON_MERGE,
+      queueName: MATH_ARRAY_MERGE,
       children,
       opts: {
         failParentOnFailure: true,
@@ -26,21 +26,21 @@ export class ComparisonFlowService {
   }
 
   async createMinMaxBulkFlow(dto: ComparisonOperationDto): Promise<string[]> {
-    const minChildren = this.createChildJobs(dto, MATH_COMPARISON_OPS.MIN);
-    const maxChildren = this.createChildJobs(dto, MATH_COMPARISON_OPS.MAX);
+    const minChildren = this.createChildJobs(dto, MATH_ARRAY_OPS.MIN);
+    const maxChildren = this.createChildJobs(dto, MATH_ARRAY_OPS.MAX);
 
     const flows = await this.mathComparisonFlowProducer.addBulk([
       {
-        name: MATH_COMPARISON_OPS.MIN,
-        queueName: MATH_COMPARISON_MERGE,
+        name: MATH_ARRAY_OPS.MIN,
+        queueName: MATH_ARRAY_MERGE,
         children: minChildren,
         opts: {
           failParentOnFailure: true,
         },
       },
       {
-        name: MATH_COMPARISON_OPS.MAX,
-        queueName: MATH_COMPARISON_MERGE,
+        name: MATH_ARRAY_OPS.MAX,
+        queueName: MATH_ARRAY_MERGE,
         children: maxChildren,
         opts: {
           failParentOnFailure: true,
@@ -51,7 +51,7 @@ export class ComparisonFlowService {
     return flows.map((flow) => flow.job.id || '');
   }
 
-  private createChildJobs(dto: ComparisonOperationDto, jobName: MATH_COMPARISON_OPS) {
+  private createChildJobs(dto: ComparisonOperationDto, jobName: MATH_ARRAY_OPS) {
     const numPartitions = Math.ceil(dto.data.length / PARTITION_SIZE);
     let startIdx = 0;
 
@@ -63,7 +63,7 @@ export class ComparisonFlowService {
           data: dto.data.slice(startIdx, startIdx + PARTITION_SIZE),
           percentage: (100 / numPartitions) * (i + 1),
         },
-        queueName: MATH_COMPARISON_CHILD,
+        queueName: MATH_ARRAY_CHILD,
       });
       startIdx = startIdx + PARTITION_SIZE;
     }
@@ -71,7 +71,7 @@ export class ComparisonFlowService {
     children.push({
       name: jobName,
       data: { data: dto.data.slice(startIdx), percentage: 100 },
-      queueName: MATH_COMPARISON_CHILD,
+      queueName: MATH_ARRAY_CHILD,
     });
 
     return children;
