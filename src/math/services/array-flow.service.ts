@@ -12,7 +12,7 @@ export class ArrayFlowService {
   constructor(@InjectMathArrayProducer() private mathFlowProducer: FlowProducer) {}
 
   async createFlow(dto: ArrayOperationDto, jobName: MATH_ARRAY_OPS): Promise<string> {
-    const children = this.createChildJobs(dto, jobName);
+    const children = this.createChildrenJobs(dto, jobName);
 
     const flow = await this.mathFlowProducer.add({
       name: jobName,
@@ -26,8 +26,8 @@ export class ArrayFlowService {
   }
 
   async createMinMaxBulkFlow(dto: ArrayOperationDto): Promise<string[]> {
-    const minChildren = this.createChildJobs(dto, MATH_ARRAY_OPS.MIN);
-    const maxChildren = this.createChildJobs(dto, MATH_ARRAY_OPS.MAX);
+    const minChildren = this.createChildrenJobs(dto, MATH_ARRAY_OPS.MIN);
+    const maxChildren = this.createChildrenJobs(dto, MATH_ARRAY_OPS.MAX);
 
     const flows = await this.mathFlowProducer.addBulk([
       {
@@ -51,7 +51,7 @@ export class ArrayFlowService {
     return flows.map((flow) => flow.job.id || '');
   }
 
-  private createChildJobs(dto: ArrayOperationDto, jobName: MATH_ARRAY_OPS) {
+  private createChildrenJobs(dto: ArrayOperationDto, jobName: MATH_ARRAY_OPS) {
     const numPartitions = Math.ceil(dto.data.length / PARTITION_SIZE);
     let startIdx = 0;
 
