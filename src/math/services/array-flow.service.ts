@@ -2,16 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { FlowChildJob, FlowProducer } from 'bullmq';
 import { MATH_ARRAY_CHILD, MATH_ARRAY_MERGE } from '../constants/math-array.constant';
 import { InjectMathComparisonProducer } from '../decorators/inject-flow-producer.decorator';
-import { ComparisonOperationDto } from '../dtos/comparison-operation.dto';
+import { ArrayOperationDto } from '../dtos/array-operation.dto';
 import { MATH_ARRAY_OPS } from '../enums/math-array-ops.enum';
 
 const PARTITION_SIZE = 4;
 
 @Injectable()
-export class ComparisonFlowService {
+export class ArrayFlowService {
   constructor(@InjectMathComparisonProducer() private mathComparisonFlowProducer: FlowProducer) {}
 
-  async createFlow(dto: ComparisonOperationDto, jobName: MATH_ARRAY_OPS): Promise<string> {
+  async createFlow(dto: ArrayOperationDto, jobName: MATH_ARRAY_OPS): Promise<string> {
     const children = this.createChildJobs(dto, jobName);
 
     const flow = await this.mathComparisonFlowProducer.add({
@@ -25,7 +25,7 @@ export class ComparisonFlowService {
     return flow.job.id || '';
   }
 
-  async createMinMaxBulkFlow(dto: ComparisonOperationDto): Promise<string[]> {
+  async createMinMaxBulkFlow(dto: ArrayOperationDto): Promise<string[]> {
     const minChildren = this.createChildJobs(dto, MATH_ARRAY_OPS.MIN);
     const maxChildren = this.createChildJobs(dto, MATH_ARRAY_OPS.MAX);
 
@@ -51,7 +51,7 @@ export class ComparisonFlowService {
     return flows.map((flow) => flow.job.id || '');
   }
 
-  private createChildJobs(dto: ComparisonOperationDto, jobName: MATH_ARRAY_OPS) {
+  private createChildJobs(dto: ArrayOperationDto, jobName: MATH_ARRAY_OPS) {
     const numPartitions = Math.ceil(dto.data.length / PARTITION_SIZE);
     let startIdx = 0;
 

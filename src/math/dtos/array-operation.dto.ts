@@ -1,6 +1,6 @@
 import { ArrayNotEmpty, IsArray } from 'class-validator';
 
-export class ComparisonOperationDto {
+export class ArrayOperationDto {
   @IsArray()
   @ArrayNotEmpty()
   data: number[];

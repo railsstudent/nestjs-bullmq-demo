@@ -2,13 +2,13 @@ import { Module } from '@nestjs/common';
 import { QueueModule } from '../queue-board/queue-board.module';
 import { MATH_ARRAY_CHILD, MATH_ARRAY_MERGE, MATH_ARRAY_PRODUCER } from './constants/math-array.constant';
 import { MATH_BINARY, MATH_UNARY } from './constants/math.constant';
-import { MathComparisonController } from './controllers/math-comparison.controller';
+import { MathArrayController } from './controllers/math-array.controller';
 import { MathController } from './controllers/math.controller';
 import { MathBinaryOperationProcessor } from './processors/math-binary-operation.processor';
-import { MathComparisonChildProcessor } from './processors/math-comparison-child.processor';
-import { MathComparisonMergeProcessor } from './processors/math-comparison-merge.processor';
+import { MathArrayChildProcessor } from './processors/math-array-child.processor';
+import { MathArrayMergeProcessor } from './processors/math-array-merge.processor';
 import { MathUnaryOperationPocessor } from './processors/math-unary-operation-pocessor.service';
-import { ComparisonFlowService } from './services/comparison-flow.service';
+import { ArrayFlowService } from './services/array-flow.service';
 
 @Module({
   imports: [
@@ -20,10 +20,10 @@ import { ComparisonFlowService } from './services/comparison-flow.service';
   providers: [
     MathBinaryOperationProcessor,
     MathUnaryOperationPocessor,
-    MathComparisonChildProcessor,
-    MathComparisonMergeProcessor,
-    ComparisonFlowService,
+    MathArrayChildProcessor,
+    MathArrayMergeProcessor,
+    ArrayFlowService,
   ],
-  controllers: [MathController, MathComparisonController],
+  controllers: [MathController, MathArrayController],
 })
 export class MathModule {}

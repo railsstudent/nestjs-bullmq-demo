@@ -8,7 +8,7 @@ import { WorkerHostProcessor } from './worker-host.processor';
 
 @Processor(MATH_ARRAY_CHILD)
 @Injectable()
-export class MathComparisonChildProcessor extends WorkerHostProcessor {
+export class MathArrayChildProcessor extends WorkerHostProcessor {
   async process(job: Job<ComparisonJobProgress, number, string>): Promise<number> {
     switch (job.name) {
       case MATH_ARRAY_OPS.MIN:
