@@ -16,16 +16,16 @@ export class QueueModule extends ConfigurableModuleClass {
 
     const bullModules = options.queues.map((name) => BullModule.registerQueue({ name }));
 
-    const flowModules = (options.flows || []).map((flow) => {
-      return BullModule.registerFlowProducer({
+    const flowProducers = (options.flows || []).map((flow) =>
+      BullModule.registerFlowProducer({
         name: flow,
-      });
-    });
+      }),
+    );
 
     return {
       ...super.register(options),
-      imports: [...bullModules, ...bullBoardModules, ...flowModules],
-      exports: [...bullModules, ...flowModules],
+      imports: [...bullModules, ...bullBoardModules, ...flowProducers],
+      exports: [...bullModules, ...flowProducers],
     };
   }
 }
