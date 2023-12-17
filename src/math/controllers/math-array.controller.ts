@@ -28,6 +28,16 @@ export class MathArrayController {
     return this.arrayFlowService.createMinMaxBulkFlow(dto);
   }
 
+  @Post('filter-odd')
+  async filterOdd(@Body() dto: ArrayOperationDto): Promise<string> {
+    return this.arrayFlowService.createFlow(dto, MATH_ARRAY_OPS.FILTER_ODD);
+  }
+
+  @Post('filter-even')
+  async filterEven(@Body() dto: ArrayOperationDto): Promise<string> {
+    return this.arrayFlowService.createFlow(dto, MATH_ARRAY_OPS.FILTER_EVEN);
+  }
+
   @Get(':id/result')
   async getResult(@Param('id') jobId: string): Promise<any> {
     const job = await this.mergeQueue.getJob(jobId);
