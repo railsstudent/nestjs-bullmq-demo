@@ -1,7 +1,6 @@
-import { InjectQueue } from '@nestjs/bullmq';
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { Queue } from 'bullmq';
-import { MATH_ARRAY_MERGE } from '../constants/math-array.constant';
+import { InjectMathArrayMergeQueue } from '../decorators/inject-queue.decorator';
 import { ArrayOperationDto } from '../dtos/array-operation.dto';
 import { MATH_ARRAY_OPS } from '../enums/math-array-ops.enum';
 import { ArrayFlowService } from '../services/array-flow.service';
@@ -10,7 +9,7 @@ import { ArrayFlowService } from '../services/array-flow.service';
 export class MathArrayController {
   constructor(
     private arrayFlowService: ArrayFlowService,
-    @InjectQueue(MATH_ARRAY_MERGE) private mergeQueue: Queue,
+    @InjectMathArrayMergeQueue() private mergeQueue: Queue,
   ) {}
 
   @Post('min')
